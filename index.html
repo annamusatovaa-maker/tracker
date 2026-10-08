@@ -30,11 +30,11 @@ button,input,textarea{font-family:inherit;font-size:inherit}
 button{cursor:pointer}
 [draggable="true"]{cursor:grab}
 [draggable="true"]:active{cursor:grabbing}
-.wrap{max-width:1376px;margin:0 auto;padding:calc(32px + env(safe-area-inset-top)) 32px calc(64px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:48px}
-.h2{margin:0;font-size:30px;font-weight:400;letter-spacing:-.01em;text-transform:uppercase;line-height:1;color:var(--white)}
-.h2.big{font-size:44px}
-.sec{display:flex;flex-direction:column;gap:14px;min-width:0}
-.sec-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;min-height:32px}
+.wrap{max-width:1376px;margin:0 auto;padding:calc(40px + env(safe-area-inset-top)) 32px calc(72px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:80px}
+.h2{margin:0;font-size:56px;font-weight:400;letter-spacing:-.01em;text-transform:uppercase;line-height:1;color:var(--white)}
+.h2.big{font-size:56px}
+.sec{display:flex;flex-direction:column;gap:22px;min-width:0}
+.sec-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;min-height:42px}
 .sec-head .l{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px}
 .board{border-radius:18px;background:var(--white);color:var(--ink)}
 .sub{font-size:13px;color:var(--white)}
@@ -77,6 +77,11 @@ button{cursor:pointer}
 .empty{padding:14px 12px;font-size:13px;color:var(--muted2)}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
 
+.sdot{position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:999px;border:2px solid var(--bg);background:var(--accent-solid)}
+.sdot.busy{background:#fff;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+.sync-ok{font-size:13px;color:var(--muted);line-height:1.5}
+@media (min-width:761px){ .prog-btn{width:40px;height:40px;padding:0;justify-content:center} .prog-txt{display:none} }
 /* шапка календаря */
 .plan-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;min-height:32px}
 .pnav{display:flex;align-items:center;gap:4px}
@@ -152,7 +157,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 /* сегодня */
 .row-today,.row3{display:flex;gap:24px;align-items:stretch}
 .grow{flex:1 1 auto;min-width:0}
-.side{flex:0 0 300px;min-width:0}
+.side{flex:0 0 384px;min-width:0}
 .progress{display:flex;align-items:center;gap:14px;font-size:14px;color:#fff}
 .bar{width:140px;height:6px;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden}
 .bar i{display:block;height:100%;border-radius:999px;background:#fff;transition:width .3s}
@@ -183,7 +188,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 
 /* заряд */
 .batt{flex:0 0 64px;display:flex;flex-direction:column;gap:14px}
-.batt .pct{min-height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fff}
+.batt .pct{min-height:56px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:#fff}
 .cells{flex:1;min-height:220px;display:flex;flex-direction:column-reverse;gap:4px;padding:6px}
 .cells i{flex:1;border-radius:6px;background:var(--soft)}
 .cells i.on{background:var(--accent)}
@@ -252,17 +257,20 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .psegs{grid-area:s;justify-self:end}
   .psegs .seg{padding:0 12px}
   #period{min-width:104px;padding:0 6px}
-  .row-today > .sec > .sec-head{flex-direction:column;align-items:stretch;gap:12px}
+  .row-today > .sec.grow > .sec-head{flex-direction:column;align-items:stretch;gap:12px}
   .progress{width:100%}
   .progress .bar{flex:1;width:auto}
   .card{min-height:0 !important}
   .card .add{margin-top:0}
-  .wrap{padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));gap:36px}
-  .h2{font-size:24px}
+  .wrap{padding:calc(24px + env(safe-area-inset-top)) 16px calc(48px + env(safe-area-inset-bottom));gap:64px}
+  .row-today,.row3{gap:64px 24px}
+  .sec{gap:18px}
+  .h2{font-size:32px}
   .h2.big{font-size:32px}
+  .plan-head .h2{font-size:32px}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .card.imp{grid-column:1 / -1}
-  .batt{flex:1 1 100%;flex-direction:row;align-items:center;gap:12px;order:-1}
+  .batt{flex:1 1 100%;flex-direction:row;align-items:center;gap:12px;order:-1;margin-top:-40px}
   .batt .pct{min-height:0;order:2}
   .batt .lbl{order:0}
   .cells{min-height:0;height:28px;flex-direction:row;padding:4px;order:1}
@@ -291,7 +299,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
           <button class="seg" data-a="view" data-v="month">Месяц</button>
         </div>
       <div class="pact">
-        <button class="icon-btn" data-a="settings" aria-label="Настройки">
+        <button class="icon-btn" data-a="settings" aria-label="Настройки" style="position:relative"><i class="sdot" id="sdot" hidden></i>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         </button>
         <button class="pill" data-a="new" aria-label="Новая задача">
@@ -317,9 +325,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
     <aside class="sec side" aria-labelledby="habits-h">
       <div class="sec-head">
         <h2 id="habits-h" class="h2">Привычки</h2>
-        <button class="pill sm" data-a="progress">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M12 20V5M19 20v-9"/></svg>
-          Прогресс
+        <button class="pill sm prog-btn" data-a="progress" aria-label="Прогресс привычек" title="Прогресс привычек">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V12M12 20V5M19 20v-9"/></svg>
+          <span class="prog-txt">Прогресс</span>
         </button>
       </div>
       <div class="board list" style="flex:1" id="habits"></div>
@@ -460,11 +468,11 @@ function fresh(){
   return {
     tasks:[], inbox:[], wishes:[], insights:[],
     habits:[
-      {id:uid(),title:'15 000 шагов',meta:'Pacer'},
-      {id:uid(),title:'Время для себя',meta:'каждый день'},
-      {id:uid(),title:'10 минут в тишине',meta:'каждый день'},
-      {id:uid(),title:'Медитация',meta:'каждый день'},
-      {id:uid(),title:'Коврик',meta:'каждый день'}
+      {id:'h1',title:'15 000 шагов',meta:'Pacer'},
+      {id:'h2',title:'Время для себя',meta:'каждый день'},
+      {id:'h3',title:'10 минут в тишине',meta:'каждый день'},
+      {id:'h4',title:'Медитация',meta:'каждый день'},
+      {id:'h5',title:'Коврик',meta:'каждый день'}
     ],
     habitLog:{}, insDraft:''
   };
@@ -473,7 +481,8 @@ function load(){
   try{ var raw=localStorage.getItem(KEY); if(raw){ var d=JSON.parse(raw); var f=fresh(); for(var k in f){ if(d[k]===undefined) d[k]=f[k]; } return d; } }catch(e){}
   return fresh();
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(D)); }catch(e){ toast('Не удалось сохранить: память браузера заполнена'); } }
+function store(){ try{ localStorage.setItem(KEY, JSON.stringify(D)); }catch(e){ toast('Не удалось сохранить: память браузера заполнена'); } }
+function save(){ stamp(); store(); Sync.schedule(); }
 
 /* ---------- вид ---------- */
 var UI = { view:'week', anchor:new Date(), insCat:'blog', insFilter:'all', wishKind:'small', modal:null, drag:null };
@@ -812,7 +821,8 @@ function drawSettings(){
   var h='<div class="dlg-h"><h3>Настройки</h3><button class="icon-btn flat" data-a="close" aria-label="Закрыть">'+CLOSE+'</button></div><div class="col"><span class="lbl">Привычки</span>';
   D.habits.forEach(function(x){ h+='<div class="row" style="padding-right:4px"><span style="flex:1">'+t(x.title)+'</span><span class="habit-meta">'+t(x.meta||'')+'</span><button class="icon-btn sm flat" data-a="habit-del" data-id="'+x.id+'" aria-label="Удалить привычку">'+CLOSE+'</button></div>'; });
   h+='<form id="habit-form" style="display:flex;gap:8px"><input class="field" id="habit-input" placeholder="Новая привычка" autocomplete="off"><button class="dark" type="submit" style="flex:none;height:48px">Добавить</button></form></div>'
-    +'<div class="col"><span class="lbl">Резервная копия</span><div style="font-size:13px;color:var(--muted);line-height:1.5">Все данные хранятся только на этом устройстве. Сохраняйте копию время от времени — из неё можно восстановить всё на любом устройстве.</div>'
+    +Sync.settingsHtml()
+    +'<div class="col"><span class="lbl">Резервная копия</span><div style="font-size:13px;color:var(--muted);line-height:1.5">'+(Sync.on()?'Данные синхронизируются автоматически. Копия\u00A0— дополнительная страховка.':'Без синхронизации данные хранятся только на\u00A0этом устройстве. Сохраняйте копию время от\u00A0времени.')+'</div>'
     +'<div class="wrapr"><button class="pill soft" data-a="export">Скачать копию</button><label class="pill soft" style="cursor:pointer">Загрузить копию<input type="file" id="import-file" accept="application/json,.json" hidden></label></div></div>'
     +'<div class="dlg-f"><button class="link" data-a="wipe">Стереть все данные</button><button class="dark" data-a="close">Готово</button></div>';
   showModal(h);
@@ -907,7 +917,10 @@ document.addEventListener('click',function(e){
     case 'pr-prev': case 'pr-next': var mm=UI.modal.month; UI.modal.month=new Date(mm.getFullYear(),mm.getMonth()+(a==='pr-prev'?-1:1),1); drawProgress(); break;
     case 'habit-del': if(confirm('Удалить привычку? Её история тоже пропадёт из прогресса.')){ D.habits=D.habits.filter(function(h){return h.id!==id;}); save(); drawSettings(); renderHabits(); renderBattery(); } break;
     case 'export': exportData(); break;
-    case 'wipe': if(confirm('Стереть все задачи, привычки, желания и инсайты? Это нельзя отменить.')){ D=fresh(); save(); closeModal(); render(); } break;
+    case 'wipe': if(confirm('Стереть все задачи, привычки, желания и инсайты'+(Sync.on()?' на всех устройствах':'')+'? Это нельзя отменить.')){ var keep={deleted:D.deleted||{},hlu:D.hlu||{}}; D=fresh(); D.deleted=keep.deleted; D.hlu=keep.hlu; save(); closeModal(); render(); } break;
+    case 'sync-connect': Sync.connect(); break;
+    case 'sync-now': Sync.run(true); break;
+    case 'sync-off': if(confirm('Отключить синхронизацию на этом устройстве? Данные останутся здесь, но перестанут обмениваться с другими устройствами.')){ Sync.off(); drawSettings(); } break;
   }
 });
 
@@ -920,7 +933,7 @@ document.addEventListener('submit',function(e){
   if(e.target.id==='habit-form'){ e.preventDefault(); var v=$('habit-input').value.trim(); if(!v) return; D.habits.push({id:uid(),title:v,meta:'каждый день'}); save(); drawSettings(); renderHabits(); renderBattery(); }
 });
 document.addEventListener('change',function(e){
-  if(e.target.id==='import-file'){ var file=e.target.files[0]; if(!file) return; var rd=new FileReader(); rd.onload=function(){ try{ var d=JSON.parse(rd.result); if(!d||!Array.isArray(d.tasks)) throw 0; D=d; var f=fresh(); for(var k in f) if(D[k]===undefined) D[k]=f[k]; save(); closeModal(); render(); toast('Данные восстановлены'); }catch(x){ toast('Не получилось прочитать файл копии'); } }; rd.readAsText(file); }
+  if(e.target.id==='import-file'){ var file=e.target.files[0]; if(!file) return; var rd=new FileReader(); rd.onload=function(){ try{ var d=JSON.parse(rd.result); if(!d||!Array.isArray(d.tasks)) throw 0; var f=fresh(); for(var k in f) if(d[k]===undefined) d[k]=f[k]; D=mergeData(D,d); save(); closeModal(); render(); toast('Данные восстановлены'); }catch(x){ toast('Не получилось прочитать файл копии'); } }; rd.readAsText(file); }
 });
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&UI.modal) closeModal();
@@ -948,14 +961,164 @@ function toggleMic(){
 function stopMic(){ if(rec&&recOn){ try{rec.stop();}catch(x){} } setMic(false); }
 function setMic(v){ recOn=v; $('mic').classList.toggle('on',v); $('mic').setAttribute('aria-pressed',v); }
 
+/* ---------- отметки изменений и слияние ---------- */
+var ARR=['tasks','inbox','wishes','insights','habits'];
+function strip(o){ var c={}; for(var k in o) if(k!=='u') c[k]=o[k]; return JSON.stringify(c); }
+function takeSnap(d){
+  var it={}, hb={};
+  ARR.forEach(function(k){ (d[k]||[]).forEach(function(x){ it[x.id]=strip(x); }); });
+  for(var dt in (d.habitLog||{})) for(var h in d.habitLog[dt]) if(d.habitLog[dt][h]) hb[dt+'|'+h]=1;
+  return {it:it,hb:hb};
+}
+var SNAP=takeSnap(D);
+// помечаем, что и когда изменилось, — чтобы при слиянии побеждала более свежая правка
+function stamp(){
+  var now=Date.now(), cur=takeSnap(D); D.deleted=D.deleted||{}; D.hlu=D.hlu||{};
+  ARR.forEach(function(k){ (D[k]||[]).forEach(function(x){ if(cur.it[x.id]!==SNAP.it[x.id]) x.u=now; }); });
+  for(var id in SNAP.it) if(!(id in cur.it)) D.deleted[id]=now;
+  var keys={}; for(var a in SNAP.hb) keys[a]=1; for(var b in cur.hb) keys[b]=1;
+  for(var key in keys) if(!!SNAP.hb[key]!==!!cur.hb[key]) D.hlu[key]=now;
+  SNAP=cur;
+}
+function mergeData(L,Rm){
+  var out=JSON.parse(JSON.stringify(L)), del={};
+  [L.deleted||{},Rm.deleted||{}].forEach(function(m){ for(var id in m) del[id]=Math.max(del[id]||0,m[id]); });
+  ARR.forEach(function(k){
+    var arr=out[k]||[], idx={}; arr.forEach(function(x,i){ idx[x.id]=i; });
+    var add=[];
+    (Rm[k]||[]).forEach(function(r){
+      if(r.id in idx){ if((r.u||0)>(arr[idx[r.id]].u||0)) arr[idx[r.id]]=JSON.parse(JSON.stringify(r)); }
+      else add.push(JSON.parse(JSON.stringify(r)));
+    });
+    arr = (k==='inbox'||k==='insights') ? add.concat(arr) : arr.concat(add);
+    out[k]=arr.filter(function(x){ return !(del[x.id] && del[x.id]>=(x.u||0)); });
+  });
+  out.deleted=del;
+  var lu=L.hlu||{}, ru=Rm.hlu||{}, hl={}, hlu={}, keys={};
+  [L.habitLog||{},Rm.habitLog||{}].forEach(function(g){ for(var dt in g) for(var h in g[dt]) keys[dt+'|'+h]=1; });
+  for(var a in lu) keys[a]=1; for(var b in ru) keys[b]=1;
+  function has(g,key){ var p=key.split('|'); return !!(g&&g[p[0]]&&g[p[0]][p[1]]); }
+  for(var key in keys){
+    var l=lu[key]||0, r=ru[key]||0, v;
+    if(r>l) v=has(Rm.habitLog,key); else if(l>r) v=has(L.habitLog,key); else v=has(L.habitLog,key)||has(Rm.habitLog,key);
+    if(v){ var pp=key.split('|'); hl[pp[0]]=hl[pp[0]]||{}; hl[pp[0]][pp[1]]=true; }
+    if(l||r) hlu[key]=Math.max(l,r);
+  }
+  out.habitLog=hl; out.hlu=hlu;
+  // одинаковые привычки с разных устройств склеиваем в одну (всегда выбираем один и тот же id)
+  var byName={}, remap={};
+  out.habits.forEach(function(h){ var k=String(h.title).trim().toLowerCase(); (byName[k]=byName[k]||[]).push(h); });
+  for(var nm in byName){ var g=byName[nm]; if(g.length<2) continue; g.sort(function(a,b){return a.id<b.id?-1:1;}); for(var i=1;i<g.length;i++) remap[g[i].id]=g[0].id; }
+  if(Object.keys(remap).length){
+    out.habits=out.habits.filter(function(h){ return !remap[h.id]; });
+    for(var dt in out.habitLog) for(var hid in out.habitLog[dt]) if(remap[hid]){ out.habitLog[dt][remap[hid]]=true; delete out.habitLog[dt][hid]; }
+    for(var kk in out.hlu){ var pr=kk.split('|'); if(remap[pr[1]]){ var nk=pr[0]+'|'+remap[pr[1]]; out.hlu[nk]=Math.max(out.hlu[nk]||0,out.hlu[kk]); delete out.hlu[kk]; } }
+  }
+  out.insDraft=L.insDraft||'';
+  return out;
+}
+function payload(d){ var c={}; for(var k in d) if(k!=='insDraft') c[k]=d[k]; return JSON.stringify(c); }
+
+/* ---------- синхронизация через GitHub (закрытый gist) ---------- */
+var Sync=(function(){
+  var SKEY='tracker.sync', FILE='tracker.json', API='https://api.github.com';
+  var cfg={}; try{ cfg=JSON.parse(localStorage.getItem(SKEY)||'{}'); }catch(e){}
+  var timer=null, busy=false, again=false, lastErr='', poll=null;
+  function persist(){ try{ localStorage.setItem(SKEY,JSON.stringify(cfg)); }catch(e){} }
+  function on(){ return !!(cfg.token&&cfg.gist); }
+  function dot(state){ var d=$('sdot'); if(!d) return; d.hidden=!state; d.className='sdot'+(state==='busy'?' busy':''); d.title=state==='err'?'Синхронизация не удалась':''; }
+  function api(path,opt){
+    opt=opt||{}; opt.headers={'Authorization':'Bearer '+cfg.token,'Accept':'application/vnd.github+json','Content-Type':'application/json'}; opt.cache='no-store';
+    return fetch(API+path,opt).then(function(r){
+      if(r.status===401) throw new Error('auth');
+      if(!r.ok) throw new Error('http '+r.status);
+      return r.json();
+    });
+  }
+  function readGist(g){
+    var f=g.files&&g.files[FILE]; if(!f) return Promise.resolve(null);
+    if(f.truncated && f.raw_url) return fetch(f.raw_url,{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){ return t?JSON.parse(t):null; });
+    return Promise.resolve(f.content?JSON.parse(f.content):null);
+  }
+  function run(manual){
+    if(!on()) return Promise.resolve();
+    if(busy){ again=true; return Promise.resolve(); }
+    if(!navigator.onLine){ dot('err'); lastErr='нет интернета'; return Promise.resolve(); }
+    busy=true; dot('busy');
+    return api('/gists/'+cfg.gist).then(readGist).then(function(remote){
+      var before=payload(D);
+      var merged = remote ? mergeData(D,remote) : D;
+      if(payload(merged)!==before){
+        D=merged; SNAP=takeSnap(D); store();
+        if(!UI.modal||UI.modal.kind==='settings'){ var sc=$('cal-scroll'), top=sc?sc.scrollTop:0; render(); if($('cal-scroll')) $('cal-scroll').scrollTop=top; }
+      }
+      if(!remote || payload(D)!==payload(remote)){
+        var body={files:{}}; body.files[FILE]={content:payload(D)};
+        return api('/gists/'+cfg.gist,{method:'PATCH',body:JSON.stringify(body)});
+      }
+    }).then(function(){
+      lastErr=''; cfg.last=Date.now(); persist(); dot(null);
+      if(manual) toast('Синхронизировано');
+      if(UI.modal&&UI.modal.kind==='settings') drawSettings();
+    }).catch(function(e){
+      lastErr = e.message==='auth' ? 'ключ не подходит или истёк' : (navigator.onLine?'GitHub не ответил':'нет интернета');
+      dot('err'); if(manual||e.message==='auth') toast('Синхронизация: '+lastErr);
+    }).then(function(){ busy=false; if(again){ again=false; schedule(); } });
+  }
+  function schedule(){ if(!on()) return; clearTimeout(timer); timer=setTimeout(function(){ run(false); },1500); }
+  function connect(){
+    var inp=$('sync-token'), tok=(inp&&inp.value||'').trim();
+    if(!tok){ toast('Вставьте ключ из GitHub'); if(inp) inp.focus(); return; }
+    cfg.token=tok; dot('busy');
+    // ищем уже созданную заметку трекера, иначе создаём новую
+    api('/gists?per_page=100').then(function(list){
+      var g=(list||[]).filter(function(x){ return x.description==='tracker-sync' && x.files && x.files[FILE]; })[0];
+      if(g) return g.id;
+      var body={description:'tracker-sync',public:false,files:{}}; body.files[FILE]={content:payload(D)};
+      return api('/gists',{method:'POST',body:JSON.stringify(body)}).then(function(n){ return n.id; });
+    }).then(function(id){
+      cfg.gist=id; persist(); startPoll();
+      return run(false).then(function(){ toast('Синхронизация включена'); if(UI.modal&&UI.modal.kind==='settings') drawSettings(); });
+    }).catch(function(e){
+      cfg={}; persist(); dot(null);
+      toast(e.message==='auth'?'GitHub не принял ключ. Проверьте, что отмечен пункт gist':'Не удалось подключиться. Проверьте интернет');
+    });
+  }
+  function off(){ cfg={}; persist(); clearInterval(poll); dot(null); }
+  function startPoll(){ clearInterval(poll); poll=setInterval(function(){ if(!document.hidden) run(false); },60000); }
+  function timeStr(ts){ var d=new Date(ts); return (todayStr()===ymd(d)?'сегодня':d.getDate()+' '+MON_GEN[d.getMonth()])+' в '+pad(d.getHours())+':'+pad(d.getMinutes()); }
+  function settingsHtml(){
+    var h='<div class="col"><span class="lbl">Синхронизация</span>';
+    if(on()){
+      h+='<div class="sync-ok">Задачи, привычки, желания и инсайты синхронизируются между всеми устройствами, где подключён этот ключ.<br>'
+        +(lastErr?'Сейчас не получилось: '+esc(lastErr)+'.':(cfg.last?'Последняя синхронизация: '+timeStr(cfg.last)+'.':''))+'</div>'
+        +'<div class="wrapr" style="align-items:center"><button class="pill soft" data-a="sync-now">Синхронизировать сейчас</button><button class="link" data-a="sync-off" style="margin-left:8px">Отключить</button></div>';
+    } else {
+      h+='<div class="sync-ok">Чтобы задачи были одинаковыми на компьютере и телефоне, подключите ключ GitHub. Один и тот же ключ вставляется на каждом устройстве.<br>'
+        +'<a href="https://github.com/settings/tokens/new?scopes=gist&description=%D0%A2%D1%80%D0%B5%D0%BA%D0%B5%D1%80" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:3px">Создать ключ на GitHub</a></div>'
+        +'<form onsubmit="return false" style="display:flex;gap:8px"><input class="field" id="sync-token" type="password" placeholder="Вставьте ключ ghp_…" autocomplete="off" spellcheck="false" aria-label="Ключ GitHub"><button class="dark" type="button" data-a="sync-connect" style="flex:none;height:48px">Подключить</button></form>';
+    }
+    return h+'</div>';
+  }
+  function init(){
+    if(on()){ run(false); startPoll(); }
+    document.addEventListener('visibilitychange',function(){ if(!document.hidden) run(false); });
+    window.addEventListener('online',function(){ run(false); });
+  }
+  return {on:on,run:run,schedule:schedule,connect:connect,off:off,settingsHtml:settingsHtml,init:init};
+})();
+
 /* ---------- запуск ---------- */
 render();
+Sync.init();
 (MQ.addEventListener?MQ.addEventListener('change',renderCalendar):MQ.addListener(renderCalendar));
 // обновляем «сегодня» и линию времени раз в минуту, а при смене даты — всё
 var lastDay=todayStr();
 setInterval(function(){ if(todayStr()!==lastDay){ lastDay=todayStr(); render(); } else if(!UI.drag&&UI.view==='week'){ var sc=$('cal-scroll'), top=sc?sc.scrollTop:0; renderCalendar(); if($('cal-scroll')) $('cal-scroll').scrollTop=top; } },60000);
 document.addEventListener('visibilitychange',function(){ if(!document.hidden && todayStr()!==lastDay){ lastDay=todayStr(); render(); } });
-if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ navigator.serviceWorker.register('sw.js').catch(function(){}); }
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){ r.update(); document.addEventListener('visibilitychange',function(){ if(!document.hidden) r.update(); }); }).catch(function(){});
+  // когда подтянулась новая версия — тихо перезагружаемся один раз
+  var reloaded=false; navigator.serviceWorker.addEventListener('controllerchange',function(){ if(reloaded) return; reloaded=true; if(!UI.modal) location.reload(); }); }
 })();
 </script>
 </body>

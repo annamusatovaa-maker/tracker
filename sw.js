@@ -1,6 +1,6 @@
 // Офлайн-режим: приложение открывается и без интернета.
 // При изменении файлов приложения поменяйте номер версии ниже.
-var CACHE = 'tracker-v3';
+var CACHE = 'tracker-v7';
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
@@ -16,9 +16,12 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   var req = e.request;
   if (req.method !== 'GET') return;
+  // запросы к GitHub (синхронизация) и прочие чужие адреса не трогаем — только сам трекер и шрифт
+  var u = new URL(req.url);
+  if (u.origin !== self.location.origin && u.hostname.indexOf('fonts.') !== 0) return;
   // Страница: сначала сеть (чтобы подтягивались обновления), без сети — из кэша
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then(function (res) {
+    e.respondWith(fetch(req, { cache: 'no-cache' }).then(function (res) {
       var copy = res.clone(); caches.open(CACHE).then(function (c) { c.put('./index.html', copy); });
       return res;
     }).catch(function () { return caches.match('./index.html'); }));
