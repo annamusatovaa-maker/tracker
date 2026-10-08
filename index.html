@@ -77,6 +77,41 @@ button{cursor:pointer}
 .empty{padding:14px 12px;font-size:13px;color:var(--muted2)}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--ink)}
 
+/* шапка календаря */
+.plan-head{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;min-height:32px}
+.pnav{display:flex;align-items:center;gap:4px}
+.pact{display:flex;align-items:center;gap:10px;margin-left:auto}
+#period{min-width:130px}
+
+/* мобильная лента дней и список дел */
+.strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:4px}
+.sday{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0 7px;border:0;border-radius:12px;background:transparent;color:var(--ink)}
+.sday .w{font-size:11px;color:var(--muted)}
+.sday .n{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:17px;font-weight:400}
+.sday.past .n{color:#BDB5AC}
+.sday.today .n{background:var(--soft2)}
+.sday.sel .n{background:var(--ink);color:#fff}
+.sday.sel.today .n{background:var(--accent)}
+.sday .dots{display:flex;gap:3px;height:5px}
+.sday .dots i{width:5px;height:5px;border-radius:999px;background:var(--ring)}
+.sday .dots i.imp{background:var(--accent-solid)}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;padding:4px}
+.mgrid .wd{text-align:center;font-size:11px;color:var(--muted);padding:4px 0}
+.agenda{border-top:1px solid var(--line);margin-top:4px;padding:12px 6px 6px;display:flex;flex-direction:column;gap:6px}
+.agenda-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 6px 4px}
+.agenda-h b{font-size:15px;font-weight:600}
+.arow{display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 10px;border-radius:12px;background:var(--soft)}
+.arow.imp{background:var(--accent);color:#fff}
+.arow .tick{flex:none;width:22px;height:22px;border-radius:999px;border:1.6px solid var(--ring);background:transparent;padding:0;display:inline-flex;align-items:center;justify-content:center;color:#fff}
+.arow.imp .tick{border-color:rgba(255,255,255,.85)}
+.arow .tick.on{border:0;background:var(--muted2)}
+.arow.imp .tick.on{background:#fff;color:var(--accent-solid)}
+.arow .tm{flex:none;width:44px;font-size:13px;opacity:.7}
+.arow .ttl{flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:0;background:transparent;color:inherit;padding:4px 0;text-align:left;font-size:15px}
+.arow .ttl span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow.done{opacity:.5}
+.arow.done .ttl span{text-decoration:line-through}
+
 /* календарь */
 .cal-scroll{overflow:auto;max-height:420px;border-radius:12px;-webkit-overflow-scrolling:touch}
 .cal{min-width:840px}
@@ -160,6 +195,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 .ins-area textarea{background:#fff;min-height:180px;resize:vertical;padding:18px 64px 18px 20px;font-size:16px;line-height:1.5}
 .ins-area .mic{position:absolute;top:12px;right:12px;width:44px;height:44px;background:var(--soft)}
 .ins-area .mic.on{background:var(--accent);color:#fff}
+.ins-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ins-save{margin-left:auto}
 .ins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
 .ins-card{display:flex;flex-direction:column;gap:10px;padding:16px}
 .ins-card .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -170,6 +207,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 /* окна */
 .overlay{position:fixed;inset:0;z-index:50;background:rgba(20,14,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
 .dialog{width:100%;max-width:620px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;padding:28px 28px 24px;border-radius:24px;background:#fff;color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:22px}
+.dialog > *{flex-shrink:0}
 .dialog.wide{max-width:760px}
 .dlg-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .dlg-h h3{margin:0;font-size:26px;font-weight:400}
@@ -200,12 +238,30 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:760px){
+  body{overflow-x:hidden}
+  .pill-txt{display:none}
+  .pact .pill{width:40px;padding:0;justify-content:center}
+  .ins-row{flex-direction:column;align-items:stretch;gap:10px}
+  #ins-cats{flex-wrap:nowrap}
+  #ins-cats .chip{padding:0 14px;white-space:nowrap}
+  .ins-save{margin-left:0;width:100%}
+  .plan-head{display:grid;grid-template-columns:1fr auto;grid-template-areas:"t a" "n s";gap:14px 8px}
+  .plan-head .h2{grid-area:t}
+  .pact{grid-area:a;margin:0;gap:8px;justify-self:end}
+  .pnav{grid-area:n}
+  .psegs{grid-area:s;justify-self:end}
+  .psegs .seg{padding:0 12px}
+  #period{min-width:104px;padding:0 6px}
+  .row-today > .sec > .sec-head{flex-direction:column;align-items:stretch;gap:12px}
+  .progress{width:100%}
+  .progress .bar{flex:1;width:auto}
+  .card{min-height:0 !important}
+  .card .add{margin-top:0}
   .wrap{padding:calc(20px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));gap:36px}
   .h2{font-size:24px}
   .h2.big{font-size:32px}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .card{min-height:180px}
-  .card.imp{grid-column:1 / -1;min-height:0}
+  .card.imp{grid-column:1 / -1}
   .batt{flex:1 1 100%;flex-direction:row;align-items:center;gap:12px;order:-1}
   .batt .pct{min-height:0;order:2}
   .batt .lbl{order:0}
@@ -223,26 +279,24 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 <div class="wrap" id="app">
 
   <section class="sec" aria-labelledby="plan-h">
-    <div class="sec-head">
-      <div class="l">
+    <div class="plan-head">
         <h2 id="plan-h" class="h2">Неделя</h2>
-        <div style="display:flex;align-items:center;gap:4px">
+        <div class="pnav">
           <button class="icon-btn sm" data-a="prev" aria-label="Предыдущий период"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
           <button class="seg" data-a="today" id="period" style="min-width:130px" title="Вернуться к сегодняшнему дню"></button>
           <button class="icon-btn sm" data-a="next" aria-label="Следующий период"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
         </div>
-        <div class="segs" role="group" aria-label="Вид календаря">
+        <div class="segs psegs" role="group" aria-label="Вид календаря">
           <button class="seg" data-a="view" data-v="week">Неделя</button>
           <button class="seg" data-a="view" data-v="month">Месяц</button>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="pact">
         <button class="icon-btn" data-a="settings" aria-label="Настройки">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         </button>
-        <button class="pill" data-a="new">
+        <button class="pill" data-a="new" aria-label="Новая задача">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          Новая задача
+          <span class="pill-txt">Новая задача</span>
         </button>
       </div>
     </div>
@@ -322,10 +376,10 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
         </button>
       </div>
-      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+      <div class="ins-row">
         <span style="font-size:13px;color:var(--muted);margin-right:4px">Куда:</span>
         <div class="wrapr" id="ins-cats"></div>
-        <button class="dark" data-a="ins-save" style="margin-left:auto">Сохранить</button>
+        <button class="dark ins-save" data-a="ins-save">Сохранить</button>
       </div>
     </div>
     <div class="segs" id="ins-filters" style="align-self:flex-start" role="group" aria-label="Фильтр инсайтов"></div>
@@ -354,7 +408,7 @@ var QUICK = {
   self:['Маникюр','Написать Кате','Долгая прогулка','Спорт','Уход за собой'],
   dw:['Контент-план','Сторис для школы','Пост для школы','Отчёт','Созвон']
 };
-var INS_CATS = [{id:'blog',name:'Поделиться в блоге',short:'Блог'},{id:'psy',name:'Психолог',short:'Психолог'},{id:'think',name:'Размышления',short:'Размышления'}];
+var INS_CATS = [{id:'blog',name:'Блог',short:'Блог'},{id:'psy',name:'Психолог',short:'Психолог'},{id:'think',name:'Размышления',short:'Размышления'}];
 var WD = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 var WD_FULL = ['понедельник','вторник','среда','четверг','пятница','суббота','воскресенье'];
 var MON_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
@@ -453,10 +507,64 @@ function repeatLabel(r){
 /* ---------- отрисовка ---------- */
 function render(){ renderCalendar(); renderToday(); renderHabits(); renderInbox(); renderWishes(); renderBattery(); renderInsights(); }
 
-function renderCalendar(){
+var MQ = window.matchMedia('(max-width:760px)');
+function weekLabel(s){
+  var e=addDays(s,6);
+  return s.getMonth()===e.getMonth()
+    ? s.getDate()+' – '+e.getDate()+' '+MON_GEN[e.getMonth()]
+    : s.getDate()+' '+MON_GEN[s.getMonth()].slice(0,3)+' – '+e.getDate()+' '+MON_GEN[e.getMonth()].slice(0,3);
+}
+function dots(ds){
+  var l=tasksOn(ds); if(!l.length) return '<span class="dots"></span>';
+  var h='<span class="dots">'; l.slice(0,3).forEach(function(x){ h+='<i class="'+(x.cat==='imp'?'imp':'')+'"></i>'; }); return h+'</span>';
+}
+// телефон: лента дней (или сетка месяца) + список дел выбранного дня
+function renderCalendarMobile(){
   var td=todayStr(), a=UI.anchor, html='';
+  if(!UI.sel) UI.sel=td;
+  if(UI.view==='week'){
+    var s=startOfWeek(a);
+    var sd=parse(UI.sel); if(sd<s||sd>addDays(s,6)) UI.sel = (td>=ymd(s)&&td<=ymd(addDays(s,6))) ? td : ymd(s);
+    $('period').textContent=weekLabel(s);
+    html+='<div class="strip">';
+    for(var i=0;i<7;i++){
+      var d=addDays(s,i), ds=ymd(d);
+      html+='<button class="sday'+(ds===td?' today':'')+(ds<td?' past':'')+(ds===UI.sel?' sel':'')+'" data-a="sel" data-d="'+ds+'" aria-pressed="'+(ds===UI.sel)+'"><span class="w">'+WD[i]+'</span><span class="n">'+d.getDate()+'</span>'+dots(ds)+'</button>';
+    }
+    html+='</div>';
+  } else {
+    var m0=new Date(a.getFullYear(),a.getMonth(),1), lead=wdIdx(m0), dim=new Date(a.getFullYear(),a.getMonth()+1,0).getDate();
+    var selD=parse(UI.sel); if(selD.getMonth()!==a.getMonth()||selD.getFullYear()!==a.getFullYear()) UI.sel = (new Date().getMonth()===a.getMonth()&&new Date().getFullYear()===a.getFullYear()) ? td : ymd(m0);
+    $('period').textContent=MON_NOM[a.getMonth()]+' '+a.getFullYear();
+    html+='<div class="mgrid">'; WD.forEach(function(w){ html+='<div class="wd">'+w+'</div>'; });
+    for(var b=0;b<lead;b++) html+='<div></div>';
+    for(var n=1;n<=dim;n++){
+      var cds=ymd(new Date(a.getFullYear(),a.getMonth(),n));
+      html+='<button class="sday'+(cds===td?' today':'')+(cds<td?' past':'')+(cds===UI.sel?' sel':'')+'" style="padding:4px 0 6px" data-a="sel" data-d="'+cds+'" aria-pressed="'+(cds===UI.sel)+'"><span class="n">'+n+'</span>'+dots(cds)+'</button>';
+    }
+    html+='</div>';
+  }
+  // список дел выбранного дня
+  var sdd=parse(UI.sel), list=tasksOn(UI.sel);
+  var title = UI.sel===td ? 'Сегодня, '+sdd.getDate()+' '+MON_GEN[sdd.getMonth()] : WD_FULL[wdIdx(sdd)][0].toUpperCase()+WD_FULL[wdIdx(sdd)].slice(1)+', '+sdd.getDate()+' '+MON_GEN[sdd.getMonth()];
+  html+='<div class="agenda"><div class="agenda-h"><b>'+title+'</b><button class="pill sm soft" data-a="new" data-date="'+UI.sel+'">+ Дело</button></div>';
+  if(!list.length) html+='<div class="empty" style="padding:6px 6px 10px">На этот день ничего не запланировано</div>';
+  list.forEach(function(x){
+    var dn=isDone(x,UI.sel);
+    html+='<div class="arow'+(x.cat==='imp'?' imp':'')+(dn?' done':'')+'">'
+      +'<button class="tick'+(dn?' on':'')+'" data-a="tick" data-id="'+x.id+'" data-d="'+UI.sel+'" aria-pressed="'+dn+'" aria-label="Отметить выполненным">'+(dn?CHECK:'')+'</button>'
+      +'<span class="tm">'+(x.time||'—')+'</span>'
+      +'<button class="ttl" data-a="open" data-id="'+x.id+'" data-d="'+UI.sel+'">'+icon(x.cat,14,2)+'<span>'+t(x.title)+'</span></button></div>';
+  });
+  html+='</div>';
+  $('calendar').innerHTML=html;
+}
+
+function renderCalendar(){
   document.querySelectorAll('[data-a="view"]').forEach(function(b){ b.classList.toggle('on', b.dataset.v===UI.view); b.setAttribute('aria-pressed', b.dataset.v===UI.view); });
   $('plan-h').textContent = UI.view==='week'?'Неделя':'Месяц';
+  if(MQ.matches){ renderCalendarMobile(); return; }
+  var td=todayStr(), a=UI.anchor, html='';
   if(UI.view==='week'){
     var s=startOfWeek(a), e=addDays(s,6);
     $('period').textContent = s.getMonth()===e.getMonth()
@@ -758,9 +866,10 @@ document.addEventListener('click',function(e){
       var k=a==='prev'?-1:1;
       UI.anchor = UI.view==='week' ? addDays(UI.anchor,7*k) : new Date(UI.anchor.getFullYear(),UI.anchor.getMonth()+k,1);
       renderCalendar(); break;
-    case 'today': UI.anchor=new Date(); UI.scrolled=false; renderCalendar(); break;
+    case 'today': UI.anchor=new Date(); UI.sel=todayStr(); UI.scrolled=false; renderCalendar(); break;
+    case 'sel': UI.sel=el.dataset.d; renderCalendar(); break;
     case 'goweek': UI.view='week'; UI.anchor=parse(el.dataset.d); renderCalendar(); break;
-    case 'new': openTask({cat:el.dataset.cat||'imp'}); break;
+    case 'new': openTask({cat:el.dataset.cat||'imp', date:el.dataset.date}); break;
     case 'open': openTask({id:id, d:el.dataset.d}); break;
     case 'tick': var x=findTask(id); if(x){ setDone(x,el.dataset.d,!isDone(x,el.dataset.d)); save(); render(); } break;
     case 'habit': var td=todayStr(); D.habitLog[td]=D.habitLog[td]||{}; if(D.habitLog[td][id]) delete D.habitLog[td][id]; else D.habitLog[td][id]=true; save(); renderHabits(); renderBattery(); break;
@@ -841,6 +950,7 @@ function setMic(v){ recOn=v; $('mic').classList.toggle('on',v); $('mic').setAttr
 
 /* ---------- запуск ---------- */
 render();
+(MQ.addEventListener?MQ.addEventListener('change',renderCalendar):MQ.addListener(renderCalendar));
 // обновляем «сегодня» и линию времени раз в минуту, а при смене даты — всё
 var lastDay=todayStr();
 setInterval(function(){ if(todayStr()!==lastDay){ lastDay=todayStr(); render(); } else if(!UI.drag&&UI.view==='week'){ var sc=$('cal-scroll'), top=sc?sc.scrollTop:0; renderCalendar(); if($('cal-scroll')) $('cal-scroll').scrollTop=top; } },60000);
