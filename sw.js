@@ -1,6 +1,6 @@
 // Офлайн-режим: приложение открывается и без интернета.
 // При изменении файлов приложения поменяйте номер версии ниже.
-var CACHE = 'tracker-v10';
+var CACHE = 'tracker-v11';
 var SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', function (e) {
