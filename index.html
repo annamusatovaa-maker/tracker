@@ -300,6 +300,21 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 .wl-n{font-size:12px;color:var(--muted)}
 .wl-day .pill.sm{width:30px;height:30px;padding:0;justify-content:center}
 .toast .undo{margin-left:12px;border:0;background:transparent;color:inherit;font:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.cat-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.cat-tile{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:14px;border:0;border-radius:16px;background:#fff;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.cat-tile .nm{font-size:14px;font-weight:600}
+.cat-tile .n{font-size:28px;font-weight:300;line-height:1;display:flex;align-items:center;gap:8px}
+.cat-tile .n i{font-style:normal;font-size:11px;font-weight:600;line-height:1;padding:4px 7px;border-radius:999px;background:var(--ink);color:#fff}
+.cat-tile.on{box-shadow:inset 0 0 0 2px var(--ink)}
+.cat-tile.imp{background:var(--accent-card);color:#fff}
+.cat-tile.imp.on{box-shadow:inset 0 0 0 2px #fff,0 0 0 2px var(--accent-solid)}
+.cat-tile.imp .n i{background:#fff;color:var(--accent-solid)}
+.cat-list{padding:8px;display:flex;flex-direction:column;gap:6px}
+.cl-h{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:12px 8px 2px}
+.cl-h span{font-weight:400}
+.cl-h.over{color:#9A5B12}
+.arow .tm.dt{width:52px;font-size:12px}
+.lists-segs{display:none}
 .ins-card .txt{font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}
 .ins-empty{padding:28px;border-radius:16px;border:1px dashed rgba(255,255,255,.35);text-align:center;font-size:14px;color:#fff}
 
@@ -355,7 +370,24 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .psegs .seg{padding:0 12px;flex:1}
   #period{min-width:104px;padding:0 6px}
   .row-today > .sec.grow > .sec-head{flex-direction:column;align-items:stretch;gap:12px}
-  .progress{width:100%}
+  .progress{width:100%;flex-wrap:nowrap}
+  /* шапка «Сегодня»: одинаковая высота для любого дня */
+  .th-top{display:grid !important;grid-template-columns:1fr auto;grid-template-areas:"h n" "d d";gap:6px 12px !important;align-items:center !important}
+  .th-top .h2{grid-area:h;white-space:nowrap}
+  .th-top .dnav{grid-area:n;margin:0}
+  .th-top .dnav #day-today{display:none !important}
+  .th-date{grid-area:d;display:flex;align-items:center;gap:12px;min-height:22px}
+  .th-back{color:rgba(255,255,255,.75);font-size:13px}
+  .row-today aside .sec-head{flex-wrap:nowrap}
+  .row-today aside .sec-head .l{flex-wrap:nowrap;gap:10px}
+  .row-today aside .prog-btn{width:40px;height:40px;padding:0;justify-content:center;flex:none}
+  .row-today aside .prog-txt{display:none}
+  .today-acts{display:flex;gap:8px;margin-top:12px}
+  .today-acts:empty{display:none}
+  .today-acts .pill{flex:1;justify-content:center;height:40px}
+  /* прокрутка внутри приложения — нижнее меню стоит на месте */
+  html,body{height:100%;overflow:hidden}
+  .wrap{position:fixed;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
   .progress .pill{flex:1 1 100%;justify-content:center;height:40px}
   .progress .bar{flex:1;width:auto}
   .card{min-height:0 !important}
@@ -411,10 +443,21 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .row-today > .batt{order:0;margin:-40px 0 -24px}
   .wlist{grid-template-columns:1fr;padding:2px}
   .goals{grid-template-columns:1fr}
+  .lists-segs{display:flex;align-self:stretch}
+  .lists-segs .seg{flex:1;padding:0 8px}
+  body[data-tab="lists"] .wrap{gap:28px}
+  body[data-tab="lists"][data-sub="cats"] [data-sub]:not([data-sub="cats"]),
+  body[data-tab="lists"][data-sub="inbox"] [data-sub]:not([data-sub="inbox"]),
+  body[data-tab="lists"][data-sub="wish"] [data-sub]:not([data-sub="wish"]){display:none !important}
+  .cat-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .cat-tile{padding:12px;gap:6px}
+  .cat-tile .n{font-size:24px}
+  .cat-list{padding:6px}
   .goal{padding:16px}
   .g-cells{grid-template-columns:repeat(10,1fr);height:28px}
 }
 @media (min-width:761px){ .tabbar{display:none !important} }
+@media (min-width:761px){ .th-back{display:none} }
 .tabbar{display:flex;position:fixed;z-index:20;left:0;right:0;bottom:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid rgba(255,255,255,.08);justify-content:space-between;gap:4px;transform:translateZ(0)}
 .tabbar button{flex:1;min-width:0;height:54px;border:0;background:transparent;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(255,255,255,.55);font:inherit;font-size:10.5px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .tabbar button[aria-current="page"]{background:#fff;color:var(--ink)}
@@ -453,9 +496,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   <div class="row-today" data-tab="today">
     <section class="sec grow" aria-labelledby="today-h">
       <div class="sec-head">
-        <div class="l" style="align-items:baseline">
+        <div class="l th-top" style="align-items:baseline">
           <h2 id="today-h" class="h2">Сегодня</h2>
-          <span class="sub" id="today-date"></span>
+          <span class="sub th-date"><span id="today-date"></span><button class="link th-back" data-a="day-today" id="day-today-m">К сегодня</button></span>
           <span class="dnav">
             <button class="icon-btn sm" data-a="day-prev" aria-label="Предыдущий день"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
             <button class="icon-btn sm" data-a="day-next" aria-label="Следующий день"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
@@ -465,6 +508,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
         <div class="progress" id="today-progress"></div>
       </div>
       <div class="cards" id="cards"></div>
+      <div class="today-acts" id="today-acts"></div>
     </section>
     <aside class="sec side" aria-labelledby="habits-h">
       <div class="sec-head">
@@ -478,8 +522,20 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
     </aside>
   </div>
 
+  <div class="segs lists-segs" data-tab="lists" role="group" aria-label="Что показать">
+    <button class="seg" data-a="sub" data-v="cats">Категории</button>
+    <button class="seg" data-a="sub" data-v="inbox">Без даты</button>
+    <button class="seg" data-a="sub" data-v="wish">Желания</button>
+  </div>
+
+  <section class="sec" aria-labelledby="cats-h" data-tab="lists" data-sub="cats">
+    <div class="sec-head"><h2 id="cats-h" class="h2">Дела по категориям</h2></div>
+    <div class="cat-tiles" id="cat-tiles"></div>
+    <div class="board cat-list" id="cat-list"></div>
+  </section>
+
   <div class="row3">
-    <section class="sec grow" aria-labelledby="inbox-h" data-tab="lists">
+    <section class="sec grow" aria-labelledby="inbox-h" data-tab="lists" data-sub="inbox">
       <div class="sec-head">
         <div class="l" style="align-items:baseline">
           <h2 id="inbox-h" class="h2">Общий список дел</h2>
@@ -501,7 +557,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
       <div class="lbl">День</div>
     </div>
 
-    <aside class="sec side" aria-labelledby="wish-h" data-tab="lists">
+    <aside class="sec side" aria-labelledby="wish-h" data-tab="lists" data-sub="wish">
       <div class="sec-head" style="justify-content:flex-start">
         <h2 id="wish-h" class="h2">Желания</h2>
         <button class="icon-btn sm" data-a="wish-form" aria-label="Добавить желание"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -547,7 +603,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   </section>
 </div>
 
-<nav class="tabbar" aria-label="Разделы"><button data-a="tab" data-v="today"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.7-5"/></svg><span>Сегодня</span></button><button data-a="tab" data-v="cal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Календарь</span></button><button data-a="tab" data-v="goals"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>Цели</span></button><button data-a="tab" data-v="lists"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="17.5" r="1"/></svg><span>Списки</span></button><button data-a="tab" data-v="ins"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><span>Инсайты</span></button></nav>
+<nav class="tabbar" aria-label="Разделы"><button data-a="tab" data-v="today"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.5 12.2l2.4 2.4 4.7-5"/></svg><span>Сегодня</span></button><button data-a="tab" data-v="cal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg><span>Календарь</span></button><button data-a="tab" data-v="goals"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg><span>Цели</span></button><button data-a="tab" data-v="lists"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="17.5" r="1"/></svg><span>Дела</span></button><button data-a="tab" data-v="ins"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><span>Инсайты</span></button></nav>
 <div id="modal-root"></div>
 
 <script>
@@ -699,7 +755,7 @@ function repeatLabel(r){
 }
 
 /* ---------- отрисовка ---------- */
-function render(){ renderCalendar(); renderToday(); renderHabits(); renderInbox(); renderWishes(); renderBattery(); renderGoals(); renderInsights(); }
+function render(){ renderCalendar(); renderToday(); renderHabits(); renderInbox(); renderWishes(); renderBattery(); renderCats(); renderGoals(); renderInsights(); }
 
 var MQ = window.matchMedia('(max-width:760px)');
 function weekLabel(s){
@@ -750,12 +806,12 @@ function renderCalendarMobile(){
 }
 
 // строка дела в списке (телефон, список недели); смахните влево — удалить
-function aRow(x,ds,wrapTitle){
+function aRow(x,ds,wrapTitle,dateLbl){
   var dn=isDone(x,ds);
   return '<div class="swp" data-swipe="'+x.id+'|'+ds+'"><div class="swp-bg"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13"/></svg>Удалить</div>'
     +'<div class="arow'+(x.cat==='imp'?' imp':'')+(dn?' done':'')+(wrapTitle?' wrapt':'')+'">'
     +'<button class="tick'+(dn?' on':'')+'" data-a="tick" data-id="'+x.id+'" data-d="'+ds+'" aria-pressed="'+dn+'" aria-label="Отметить выполненным">'+(dn?CHECK:'')+'</button>'
-    +(x.time?'<span class="tm">'+x.time+'<small>'+durLabel(x.dur)+'</small></span>':'')
+    +(dateLbl?'<span class="tm dt">'+dateLbl+(x.time?'<small>'+x.time+'</small>':'')+'</span>':(x.time?'<span class="tm">'+x.time+'<small>'+durLabel(x.dur)+'</small></span>':''))
     +'<button class="ttl" data-a="open" data-id="'+x.id+'" data-d="'+ds+'">'+tIcon(x,15,2)+'<span>'+t(x.title)+'</span></button></div></div>';
 }
 // список дел недели по дням
@@ -867,15 +923,20 @@ function renderToday(){
   var wdName=WD_FULL[wdIdx(sd)];
   $('today-h').textContent = isT?'Сегодня':(rel||wdName[0].toUpperCase()+wdName.slice(1));
   $('today-date').textContent = (isT||rel?wdName+', ':'')+sd.getDate()+' '+MON_GEN[sd.getMonth()];
-  $('day-today').hidden=isT;
+  $('day-today').hidden=isT; $('day-today-m').style.visibility=isT?'hidden':'visible';
   var list=tasksOn(td), done=list.filter(function(x){return isDone(x,td);}).length, pct=list.length?Math.round(done/list.length*100):0;
-  $('today-progress').innerHTML='<span>Сделано <b style="font-weight:600">'+done+'</b> из '+list.length+'</span><div class="bar" role="progressbar" aria-label="Выполнено задач за день" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div>'
-    +(isT&&movableToday().length?'<button class="pill sm" data-a="move-tomorrow" title="Перенести несделанные задачи на завтра"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Перенести на\u00A0завтра</button>':'')
+  var acts=(isT&&movableToday().length?'<button class="pill sm" data-a="move-tomorrow" title="Перенести несделанные задачи на завтра"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Перенести на\u00A0завтра</button>':'')
     +(isT&&[0,5,6].indexOf(wdIdx(now))>=0?'<button class="pill sm" data-a="week" data-d="'+(wdIdx(now)===0?ymd(addDays(now,-7)):real)+'">Итоги недели</button>':'');
+  $('today-progress').innerHTML='<span>Сделано <b style="font-weight:600">'+done+'</b> из '+list.length+'</span><div class="bar" role="progressbar" aria-label="Выполнено задач за день" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><i style="width:'+pct+'%"></i></div>'+(MQ.matches?'':acts);
+  $('today-acts').innerHTML=MQ.matches?acts:'';
   var html='';
   if(MQ.matches){
     // телефон: все дела дня одним списком, сначала со временем
-    var open=list.filter(function(x){ return !isDone(x,td); });
+    var open=list.filter(function(x){ return !isDone(x,td); }).sort(function(a,b){
+      if(!!a.time!==!!b.time) return a.time?-1:1;
+      if(a.time&&a.time!==b.time) return a.time<b.time?-1:1;
+      return (b.cat==='imp')-(a.cat==='imp');
+    });
     html='<div class="board today-list"><button class="add" data-a="new" data-date="'+td+'">'+PLUS_C+'Добавить дело</button>';
     open.forEach(function(x){ html+=aRow(x,td,true); });
     if(!list.length) html+='<div class="empty" style="padding:4px 10px 10px">На этот день пока ничего нет</div>';
@@ -994,6 +1055,42 @@ function editWish(el,id){
   function fin(ok){ if(done) return; done=true; var v=inp.value.trim(); if(ok&&v&&v!==w.text){ w.text=v; save(); } renderWishes(); }
   inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); fin(true); } if(e.key==='Escape'){ e.stopPropagation(); fin(false); } });
   inp.addEventListener('blur',function(){ fin(true); });
+}
+
+/* ---------- дела по категориям ---------- */
+function catGroups(cat){
+  var td=todayStr(), tm=ymd(addDays(new Date(),1)), wk=ymd(addDays(new Date(),7));
+  var g={over:[],today:[],tom:[],week:[],later:[],rep:[]};
+  D.tasks.forEach(function(x){
+    if(x.cat!==cat) return;
+    if(x.repeat&&x.repeat.type!=='none'){ g.rep.push({x:x,d:td}); return; }
+    if(isDone(x,x.date)) return;
+    var o={x:x,d:x.date};
+    if(x.date<td) g.over.push(o); else if(x.date===td) g.today.push(o); else if(x.date===tm) g.tom.push(o); else if(x.date<=wk) g.week.push(o); else g.later.push(o);
+  });
+  function srt(a,b){ return a.d<b.d?-1:a.d>b.d?1:((a.x.time||'99')<(b.x.time||'99')?-1:1); }
+  for(var k in g) g[k].sort(srt);
+  g.n=g.over.length+g.today.length+g.tom.length+g.week.length+g.later.length;
+  return g;
+}
+function shortDate(ds){ var d=parse(ds); return d.getDate()+'\u00A0'+MON_GEN[d.getMonth()].slice(0,3); }
+function renderCats(){
+  if(!UI.cat) UI.cat='home';
+  var h='';
+  CATS.forEach(function(c){ var g=catGroups(c.id);
+    h+='<button class="cat-tile'+(UI.cat===c.id?' on':'')+(c.id==='imp'?' imp':'')+'" data-a="cat-pick" data-id="'+c.id+'" aria-pressed="'+(UI.cat===c.id)+'">'+icon(c.id,18,1.8)+'<span class="nm">'+c.name+'</span><span class="n">'+g.n+(g.over.length?'<i title="Просрочено">'+g.over.length+'</i>':'')+'</span></button>'; });
+  $('cat-tiles').innerHTML=h;
+  var g=catGroups(UI.cat), td=todayStr(), html='<div class="agenda-h"><b>'+CAT_NAME[UI.cat]+'</b><button class="pill sm soft" data-a="new" data-cat="'+UI.cat+'">+ Дело</button></div>';
+  [['over','Просрочено'],['today','Сегодня'],['tom','Завтра'],['week','На неделе'],['later','Позже'],['rep','Повторяются']].forEach(function(p){
+    var list=g[p[0]]; if(!list.length) return;
+    html+='<div class="cl-h'+(p[0]==='over'?' over':'')+'">'+p[1]+' <span>'+list.length+'</span></div>';
+    list.forEach(function(o){
+      var lbl = p[0]==='rep' ? repeatLabel(o.x.repeat) : (p[0]==='today'||p[0]==='tom') ? '' : shortDate(o.d);
+      html+=p[0]==='rep' ? aRow(o.x,o.d,true,'<span style="font-size:11px">'+esc(lbl)+'</span>') : aRow(o.x,o.d,true,lbl||null);
+    });
+  });
+  if(!g.n&&!g.rep.length) html+='<div class="empty" style="padding:4px 8px 10px">В этой категории дел нет</div>';
+  $('cat-list').innerHTML=html;
 }
 
 /* ---------- цели ---------- */
@@ -1373,6 +1470,11 @@ function setTab(v){
   document.querySelectorAll('.tabbar button').forEach(function(b){ if(b.dataset.v===v) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
 }
 (function(){ var v='today'; try{ v=localStorage.getItem('tracker.tab')||'today'; }catch(e){} setTab(v); })();
+function setSub(v){
+  document.body.dataset.sub=v; try{ localStorage.setItem('tracker.sub',v); }catch(e){}
+  document.querySelectorAll('[data-a="sub"]').forEach(function(b){ b.classList.toggle('on',b.dataset.v===v); b.setAttribute('aria-pressed',b.dataset.v===v); });
+}
+(function(){ var v='cats'; try{ v=localStorage.getItem('tracker.sub')||'cats'; }catch(e){} setSub(v); })();
 
 /* ---------- клики ---------- */
 document.addEventListener('click',function(e){
@@ -1381,7 +1483,9 @@ document.addEventListener('click',function(e){
   var a=el.dataset.a, id=el.dataset.id;
   if(a==='overlay'){ if(e.target===el) closeModal(); return; }
   switch(a){
-    case 'tab': setTab(el.dataset.v); window.scrollTo(0,0); if(el.dataset.v==='cal'){ UI.scrolled=false; renderCalendar(); } break;
+    case 'cat-pick': UI.cat=id; renderCats(); break;
+    case 'sub': setSub(el.dataset.v); $('app').scrollTop=0; break;
+    case 'tab': setTab(el.dataset.v); window.scrollTo(0,0); $('app').scrollTop=0; if(el.dataset.v==='cal'){ UI.scrolled=false; renderCalendar(); } break;
     case 'view': UI.view=el.dataset.v; UI.scrolled=false; renderCalendar(); break;
     case 'prev': case 'next':
       var k=a==='prev'?-1:1;
