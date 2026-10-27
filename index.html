@@ -347,7 +347,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 .q-chips{display:flex;align-items:center;gap:6px}
 .q-chip{position:relative;height:36px;padding:0 10px;border-radius:10px;gap:6px;font-size:13px;color:#5C534A;background:var(--soft);cursor:pointer;overflow:hidden;flex:none;border:0;display:inline-flex;align-items:center}
 .q-chip.on{background:var(--ink);color:#fff}
-.q-chip input,.q-chip select{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px;cursor:pointer}
+.q-chip.open{box-shadow:inset 0 0 0 2px var(--accent-solid)}
+.q-cs{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-right:6px}
+.q-cs::-webkit-scrollbar{display:none}
+.q-pick{display:flex;gap:6px;overflow-x:auto;margin:10px -14px 0;padding:0 14px 2px;scrollbar-width:none}
+.q-pick::-webkit-scrollbar{display:none}
+.q-pick[hidden]{display:none}
+.qopt{flex:none;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--soft);color:#5C534A;font:inherit;font-size:13px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;cursor:pointer}
+.qopt.on{background:var(--ink);color:#fff}
+.qsheet{will-change:transform;transition:transform .12s ease-out}
 .q-send{margin-left:auto;flex:none;width:42px;height:42px;border-radius:999px;border:0;background:var(--ink);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .arow{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .swp.lifted{z-index:5;box-shadow:0 14px 30px rgba(0,0,0,.28);position:relative;transition:none}
@@ -356,6 +364,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 .swp.nest-t .arow{box-shadow:inset 0 0 0 2px var(--accent-solid);background:#FBF4E4}
 .swp.drop .arow{box-shadow:inset 0 0 0 2px var(--accent-solid)}
 .drop-line{height:4px;border-radius:4px;background:var(--accent-solid);margin:1px 12px}
+.ph-sub{opacity:.45;font-size:.62em;letter-spacing:-.01em;white-space:nowrap}
+.ov-btn{display:flex;align-items:center;gap:8px;width:100%;height:40px;padding:0 12px;border:0;border-radius:12px;background:#FBF4E4;color:#9A5B12;font:inherit;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-top:2px}
+.ov-btn span{flex:1;text-align:left}
+.ov-btn b{font-weight:600}
+.past-btn{align-self:flex-start;grid-column:1/-1;border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:3px;padding:6px 8px;cursor:pointer}
 .ins-card .txt{font-size:15px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}
 .ins-empty{padding:28px;border-radius:16px;border:1px dashed rgba(255,255,255,.35);text-align:center;font-size:14px;color:#fff}
 
@@ -406,7 +419,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .plan-head .h2{grid-area:t}
   .pact{grid-area:a;margin:0;gap:8px;justify-self:end}
   .pnav{grid-area:n}
-  .plan-head{grid-template-areas:"t a" "s s" "n n" !important}
+  .plan-head{grid-template-areas:"t a" "s s" !important}
   .psegs{grid-area:s;justify-self:stretch;display:flex}
   .psegs .seg{padding:0 12px;flex:1}
   #period{min-width:104px;padding:0 6px}
@@ -419,7 +432,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
   .th-top .dnav #day-today{display:none !important}
   .th-date{grid-area:d;display:flex;align-items:center;gap:12px;min-height:22px}
   .th-back{color:rgba(255,255,255,.75);font-size:13px}
-  .pnav .icon-btn{display:none}
+  .pnav{display:none !important}
+  .plan-head{grid-template-areas:"t a" "s s" !important}
   .psegs [data-v="list"]{display:none}
   .wstrip{display:grid;grid-template-columns:repeat(7,1fr);margin:-6px -4px 0;touch-action:pan-y}
   .ws-d{display:flex;flex-direction:column;align-items:center;gap:5px;border:0;background:transparent;color:rgba(255,255,255,.55);font:inherit;font-size:11px;padding:2px 0;cursor:pointer}
@@ -885,10 +899,10 @@ function renderCalendarMobile(){
     html+='<button class="sday'+(cds===td?' today':'')+(cds<td?' past':'')+(cds===UI.csel?' sel':'')+'" style="padding:4px 0 6px" data-a="csel" data-d="'+cds+'" aria-pressed="'+(cds===UI.csel)+'"><span class="n">'+n+'</span>'+dots(cds)+'</button>';
   }
   html+='</div>';
-  var sdd=parse(UI.csel), list=tasksOn(UI.csel).sort(byOrder);
+  var sdd=parse(UI.csel), all=tasksOn(UI.csel), list=all.filter(function(x){ return !isDone(x,UI.csel); }).sort(byOrder);
   var title = UI.csel===td ? 'Сегодня, '+sdd.getDate()+' '+MON_GEN[sdd.getMonth()] : WD_FULL[wdIdx(sdd)][0].toUpperCase()+WD_FULL[wdIdx(sdd)].slice(1)+', '+sdd.getDate()+' '+MON_GEN[sdd.getMonth()];
   html+='<div class="agenda" data-list="cday"><div class="agenda-h"><b>'+title+'</b><button class="pill sm soft" data-a="new" data-date="'+UI.csel+'">+ Дело</button></div>';
-  if(!list.length) html+='<div class="empty" style="padding:6px 6px 10px">На этот день ничего не запланировано</div>';
+  if(!list.length) html+='<div class="empty" style="padding:6px 6px 10px">'+(all.length?'Всё сделано':'На этот день ничего не запланировано')+'</div>';
   list.forEach(function(x){ html+=aRow(x,UI.csel,true); });
   html+='</div>';
   $('calendar').innerHTML=html;
@@ -916,14 +930,16 @@ function aRow(x,ds,wrapTitle,dateLbl){
 // список дел недели по дням
 function weekListHtml(){
   var s=startOfWeek(UI.anchor), td=todayStr(), html='<div class="wlist" data-list="week">';
+  var curWeek = ymd(s)<=td && td<=ymd(addDays(s,6)), nPast=curWeek?wdIdx(parse(td)):0;
+  if(nPast) html+='<button class="past-btn" data-a="show-past">'+(UI.showPast?'Скрыть прошедшие дни':'Показать прошедшие дни ('+nPast+')')+'</button>';
   for(var i=0;i<7;i++){
     var d=addDays(s,i), ds=ymd(d), list=tasksOn(ds).sort(byOrder), open=list.filter(function(x){ return !isDone(x,ds); });
     var past=ds<td;
+    if(curWeek&&past&&!UI.showPast) continue;
     html+='<div class="wl-day'+(ds===td?' today':'')+(past?' past':'')+'"><div class="agenda-h"><b>'+WD_FULL[i][0].toUpperCase()+WD_FULL[i].slice(1)+', '+d.getDate()+' '+MON_GEN[d.getMonth()]+(ds===td?' · сегодня':'')+'</b>'
       +'<span style="display:flex;align-items:center;gap:8px"><span class="wl-n">'+(list.length?(list.length-open.length)+'/'+list.length:'')+'</span><button class="pill sm soft" data-a="new" data-date="'+ds+'" aria-label="Добавить дело на этот день">+</button></span></div>';
-    if(!list.length) html+='<div class="empty" style="padding:2px 8px 6px">Свободно</div>';
+    if(!open.length) html+='<div class="empty" style="padding:2px 8px 6px">'+(list.length?'Всё сделано':'Свободно')+'</div>';
     open.forEach(function(x){ html+=aRow(x,ds,true); });
-    list.filter(function(x){ return isDone(x,ds); }).forEach(function(x){ html+=aRow(x,ds,true); });
     html+='</div>';
   }
   return html+'</div>';
@@ -931,7 +947,9 @@ function weekListHtml(){
 
 function renderCalendar(){
   document.querySelectorAll('[data-a="view"]').forEach(function(b){ b.classList.toggle('on', b.dataset.v===UI.view); b.setAttribute('aria-pressed', b.dataset.v===UI.view); });
-  $('plan-h').textContent = UI.view==='month'?'Месяц':'Неделя';
+  if(MQ.matches){ var aa=UI.anchor, ss=startOfWeek(aa);
+    $('plan-h').innerHTML = UI.view==='month' ? 'Месяц <span class="ph-sub">'+MON_NOM[aa.getMonth()].toLowerCase()+(aa.getFullYear()!==new Date().getFullYear()?' '+aa.getFullYear():'')+'</span>' : 'Неделя <span class="ph-sub">'+weekLabel(ss)+'</span>';
+  } else $('plan-h').textContent = UI.view==='month'?'Месяц':'Неделя';
   if(UI.view==='list'){ $('period').textContent=weekLabel(startOfWeek(UI.anchor)); $('calendar').innerHTML=weekListHtml(); return; }
   if(MQ.matches){ renderCalendarMobile(); return; }
   var td=todayStr(), a=UI.anchor, html='';
@@ -1033,8 +1051,13 @@ function renderToday(){
     // телефон: все дела дня одним списком, сначала со временем
     renderStrip();
     var open=list.filter(function(x){ return !isDone(x,td); }).sort(byOrder), ov=isT?overdue():[];
-    html='<div class="board today-list" data-list="day:'+td+'"><button class="add today-add" data-a="quick" data-date="'+td+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Новое дело</button>';
-    if(ov.length){ html+='<div class="cl-h over">Просрочено</div>'; ov.forEach(function(x){ html+=aRow(x,x.date,true,shortDate(x.date)); }); if(open.length) html+='<div class="cl-h">'+(isT?'Сегодня':'')+'</div>'; }
+    var addBtn='<button class="add today-add" data-a="quick" data-date="'+td+'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Новое дело</button>';
+    html='<div class="board today-list" data-list="day:'+td+'">';
+    if(ov.length){
+      html+='<button class="ov-btn" data-a="ov-toggle" aria-expanded="'+!!UI.ovOpen+'"><span>Просрочено</span><b>'+ov.length+'</b>'+icon(UI.ovOpen?'chevu':'chevd',15,2)+'</button>';
+      if(UI.ovOpen){ ov.forEach(function(x){ html+=aRow(x,x.date,true,shortDate(x.date)); }); html+='<div class="cl-h">'+(isT?'Сегодня':'')+'</div>'; }
+    }
+    html+=addBtn;
     open.forEach(function(x){ html+=aRow(x,td,true); });
     if(!list.length) html+='<div class="empty" style="padding:4px 10px 10px">На этот день пока ничего нет</div>';
     else if(!open.length) html+='<div class="empty" style="padding:4px 10px 10px">Всё сделано</div>';
@@ -1303,28 +1326,36 @@ function showModal(html, wide){
 
 // быстрое добавление (телефон): строка над клавиатурой, как в TickTick
 function qDateLbl(ds){ var td=todayStr(); if(ds===td) return 'Сегодня'; if(ds===ymd(addDays(new Date(),1))) return 'Завтра'; return shortDate(ds); }
-function openQuick(date,cat){
-  UI.modal={kind:'quick', date:date||UI.sel||todayStr(), time:'', cat:cat||null, catSet:!!cat, dateSet:false, timeSet:false};
-  var opts=CATS.map(function(c){ return '<option value="'+c.id+'">'+c.name+'</option>'; }).join('');
-  $('modal-root').innerHTML='<div class="overlay q-ov" data-a="overlay"><div class="qsheet" id="qsheet" role="dialog" aria-modal="true" aria-label="Новое дело">'
-    +'<input class="q-in" id="q-title" placeholder="Что нужно сделать?" autocomplete="off" enterkeyhint="done">'
-    +'<div class="q-chips">'
-    +'<label class="chip q-chip on" id="q-date-c">'+icon('cal2',15,1.9)+'<span id="q-date-l"></span><input type="date" id="q-date" aria-label="Дата"></label>'
-    +'<label class="chip q-chip" id="q-time-c">'+icon('clock',15,1.9)+'<span id="q-time-l">Время</span><input type="time" id="q-time" aria-label="Время"></label>'
-    +'<label class="chip q-chip" id="q-cat-c"><span id="q-cat-i"></span><span id="q-cat-l"></span><select id="q-cat" aria-label="Категория">'+opts+'</select></label>'
-    +'<button class="chip q-chip" data-a="q-more" aria-label="Подробнее">'+icon('dots',15,1.9)+'</button>'
-    +'<button class="q-send" data-a="q-send" aria-label="Добавить">'+icon('up2',18,2.2)+'</button></div></div></div>';
+function openQuick(date,cat,pre){
+  pre=pre||{};
+  UI.modal={kind:'quick', date:pre.date||date||UI.sel||todayStr(), time:pre.time||'', cat:pre.cat||cat||null, catSet:!!(pre.cat||cat), dateSet:!!pre.date, timeSet:!!pre.time, pick:null};
+  $('modal-root').innerHTML='<div class="overlay q-ov" data-a="q-close"><div class="qsheet" id="qsheet" role="dialog" aria-modal="true" aria-label="Новое дело">'
+    +'<input class="q-in" id="q-title" placeholder="Что нужно сделать?" autocomplete="off" enterkeyhint="send">'
+    +'<div class="q-chips" id="q-chips"></div><div class="q-pick" id="q-pick"></div></div></div>';
   document.body.style.overflow='hidden';
-  drawQuick(); var inp=$('q-title'); inp.focus();
-  fitQuick(); if(window.visualViewport){ visualViewport.addEventListener('resize',fitQuick); visualViewport.addEventListener('scroll',fitQuick); }
+  var inp=$('q-title'); if(pre.title) inp.value=pre.title;
+  drawQuick(); inp.focus();
+  // пока клавиатура открыта — держим окно прямо над ней
+  if(window.visualViewport){ visualViewport.addEventListener('resize',fitQuick); visualViewport.addEventListener('scroll',fitQuick); } fitQuick();
+  // клавиатуру закрыли (галочка или тап мимо) — закрываем окно
+  inp.addEventListener('blur',function(){ setTimeout(function(){ if(UI.modal&&UI.modal.kind==='quick'&&document.activeElement!==$('q-title')&&!UI.modal.keep) closeModal(); },180); });
 }
-function fitQuick(){ var sh=$('qsheet'); if(!sh||!window.visualViewport) return; var vv=visualViewport; sh.style.bottom=Math.max(0,window.innerHeight-vv.height-vv.offsetTop)+'px'; }
+var fitRaf=0;
+function fitQuick(){ cancelAnimationFrame(fitRaf); fitRaf=requestAnimationFrame(function(){ var sh=$('qsheet'); if(!sh||!window.visualViewport) return; var vv=visualViewport, off=Math.max(0,window.innerHeight-vv.height-vv.offsetTop); sh.style.transform='translateY('+(-off)+'px)'; }); }
 function drawQuick(){
-  var M=UI.modal; if(!M||M.kind!=='quick') return;
-  var c=M.cat||'imp';
-  $('q-date-l').textContent=qDateLbl(M.date); $('q-date').value=M.date;
-  $('q-time-l').textContent=M.time||'Время'; $('q-time-c').classList.toggle('on',!!M.time); $('q-time').value=M.time||'';
-  $('q-cat-i').innerHTML=icon(c,15,1.9); $('q-cat-l').textContent=M.cat?CAT_NAME[c]:'Категория'; $('q-cat-c').classList.toggle('on',!!M.cat); $('q-cat').value=c;
+  var M=UI.modal; if(!M||M.kind!=='quick') return; var c=M.cat||'imp';
+  $('q-chips').innerHTML='<div class="q-cs">'
+    +'<button class="chip q-chip'+(M.pick==='date'?' open':'')+' on" data-a="q-pick" data-v="date">'+icon('cal2',15,1.9)+qDateLbl(M.date)+'</button>'
+    +'<button class="chip q-chip'+(M.time?' on':'')+(M.pick==='time'?' open':'')+'" data-a="q-pick" data-v="time">'+icon('clock',15,1.9)+(M.time||'Время')+'</button>'
+    +'<button class="chip q-chip'+(M.cat?' on':'')+(M.pick==='cat'?' open':'')+'" data-a="q-pick" data-v="cat">'+icon(c,15,1.9)+(M.cat?CAT_NAME[c]:'Категория')+'</button>'
+    +'<button class="chip q-chip" data-a="q-more" aria-label="Подробнее">'+icon('dots',15,1.9)+'</button></div>'
+    +'<button class="q-send" data-a="q-send" aria-label="Добавить">'+icon('up2',18,2.2)+'</button>';
+  var h='';
+  if(M.pick==='date'){ for(var k=0;k<14;k++){ var ds=ymd(addDays(new Date(),k)), d=parse(ds); h+='<button class="qopt'+(ds===M.date?' on':'')+'" data-a="q-set" data-k="date" data-v="'+ds+'">'+(k===0?'Сегодня':k===1?'Завтра':WD[wdIdx(d)]+', '+d.getDate())+'</button>'; } }
+  if(M.pick==='time'){ h+='<button class="qopt'+(!M.time?' on':'')+'" data-a="q-set" data-k="time" data-v="">Без времени</button>'; for(var hh=7;hh<=22;hh++){ ['00','30'].forEach(function(mm){ var tv=pad(hh)+':'+mm; h+='<button class="qopt'+(tv===M.time?' on':'')+'" data-a="q-set" data-k="time" data-v="'+tv+'">'+tv+'</button>'; }); } }
+  if(M.pick==='cat'){ CATS.forEach(function(cc){ h+='<button class="qopt'+(M.cat===cc.id?' on':'')+'" data-a="q-set" data-k="cat" data-v="'+cc.id+'">'+icon(cc.id,14,1.9)+cc.name+'</button>'; }); }
+  $('q-pick').innerHTML=h; $('q-pick').hidden=!h;
+  if(M.pick==='time'){ var on=$('q-pick').querySelector('.on'); if(on) on.scrollIntoView({inline:'center',block:'nearest'}); }
 }
 function quickParse(){
   var M=UI.modal; if(!M||M.kind!=='quick') return; var pq=parseQuick($('q-title').value);
@@ -1336,10 +1367,12 @@ function saveQuick(){
   var pq=parseQuick(raw), title=(pq.any&&pq.title)?pq.title:(raw[0].toUpperCase()+raw.slice(1));
   D.tasks.push({id:uid(),title:title,cat:M.cat||pq.cat||'imp',icon:pq.icon||presetIcon(title),date:M.date,time:M.time||'',dur:pq.dur||60,desc:'',steps:[],repeat:{type:'none',days:[]},doneOn:{}});
   save(); render();
-  // окно остаётся открытым — можно сразу записать следующее дело
-  $('q-title').value=''; M.catSet=false; M.timeSet=false; M.cat=null; M.time=''; drawQuick(); $('q-title').focus();
+  $('q-title').value=''; M.catSet=false; M.timeSet=false; M.cat=null; M.time=''; M.pick=null; drawQuick(); $('q-title').focus();
   toast('Добавлено: '+title);
 }
+// кнопки в окне не забирают фокус — клавиатура остаётся открытой
+document.addEventListener('pointerdown',function(e){ if(e.target.closest&&e.target.closest('#qsheet button')) e.preventDefault(); });
+document.addEventListener('mousedown',function(e){ if(e.target.closest&&e.target.closest('#qsheet button')) e.preventDefault(); });
 
 // окно задачи: новая или редактирование
 function openTask(opts){
@@ -1349,7 +1382,7 @@ function openTask(opts){
     id:null, title:opts.title||'', cat:opts.cat||'imp', date:opts.date||todayStr(), time:opts.time||'', dur:60, desc:'', steps:[], repeat:{type:'none',days:[]}
   };
   f.repeat=f.repeat||{type:'none',days:[]};
-  UI.modal={kind:'task', f:f, occ:opts.d||f.date, inboxId:opts.inboxId||null};
+  UI.modal={kind:'task', f:f, occ:opts.d||f.date, inboxId:opts.inboxId||null, fromQuick:!!opts.fromQuick};
   drawTask();
 }
 function drawTask(){
@@ -1654,6 +1687,8 @@ document.addEventListener('click',function(e){
   var a=el.dataset.a, id=el.dataset.id;
   if(a==='overlay'){ if(e.target===el) closeModal(); return; }
   switch(a){
+    case 'ov-toggle': UI.ovOpen=!UI.ovOpen; renderToday(); break;
+    case 'show-past': UI.showPast=!UI.showPast; renderCalendar(); break;
     case 'hab-toggle': UI.habOpen=!UI.habOpen; renderHabSum(); break;
     case 'sub-toggle': UI.openSub=UI.openSub||{}; UI.openSub[id]=!UI.openSub[id]; render(); break;
     case 'step-tick': var sx=findTask(id); if(sx&&sx.steps&&sx.steps[+el.dataset.i]){ var q=sx.steps[+el.dataset.i]; q.done=!q.done; save(); render(); } break;
@@ -1662,7 +1697,10 @@ document.addEventListener('click',function(e){
         save(); render(); toast('Стало отдельным делом'); } break;
     case 'quick': openQuick(el.dataset.date); break;
     case 'q-send': saveQuick(); break;
-    case 'q-more': var qm=UI.modal, qt=$('q-title').value.trim(); closeModal(); openTask({title:qt, date:qm.date, time:qm.time, cat:qm.cat||'imp'}); break;
+    case 'q-close': if(e.target===el) closeModal(); break;
+    case 'q-pick': UI.modal.pick = UI.modal.pick===el.dataset.v ? null : el.dataset.v; drawQuick(); $('q-title').focus(); break;
+    case 'q-set': var QM=UI.modal; if(el.dataset.k==='date'){ QM.date=el.dataset.v; QM.dateSet=true; } if(el.dataset.k==='time'){ QM.time=el.dataset.v; QM.timeSet=true; } if(el.dataset.k==='cat'){ QM.cat=el.dataset.v; QM.catSet=true; } QM.pick=null; drawQuick(); $('q-title').focus(); break;
+    case 'q-more': var qm=UI.modal, qt=$('q-title').value.trim(); qm.keep=true; closeModal(); openTask({title:qt, date:qm.date, time:qm.time, cat:qm.cat||'imp', fromQuick:true}); break;
     case 'folder': if(id==='inbox'||id==='wish'){ UI.folder=null; setSub(id); } else { UI.folder=id; setSub('cats'); } renderCats(); $('app').scrollTop=0; break;
     case 'folder-back': UI.folder=null; setSub('cats'); renderCats(); $('app').scrollTop=0; break;
     case 'cat-pick': UI.cat=id; renderCats(); break;
@@ -1713,7 +1751,7 @@ document.addEventListener('click',function(e){
     case 'goal-del': if(confirm('Удалить цель вместе с историей?')){ D.goals=D.goals.filter(function(x){ return x.id!==UI.modal.id; }); save(); closeModal(); renderGoals(); } break;
     case 'ins-del': D.insights=D.insights.filter(function(n){return n.id!==id;}); save(); renderInsights(); break;
     case 'mic': toggleMic(); break;
-    case 'close': closeModal(); break;
+    case 'close': if(UI.modal&&UI.modal.kind==='task'&&UI.modal.fromQuick){ readTaskForm(); var ff=UI.modal.f; closeModal(); openQuick(ff.date,null,{title:ff.title,date:ff.date,time:ff.time,cat:ff.cat}); } else closeModal(); break;
     // окно задачи
     case 'f-cat': readTaskForm(); UI.modal.f.cat=id; drawTask(); break;
     case 'f-quick': readTaskForm(); UI.modal.f.title=el.dataset.v; drawTask(); var ti=$('f-time'); if(ti && window.matchMedia('(pointer:fine)').matches) ti.focus(); break;
@@ -1753,12 +1791,7 @@ document.addEventListener('change',function(e){
   if(e.target.id==='import-file'){ var file=e.target.files[0]; if(!file) return; var rd=new FileReader(); rd.onload=function(){ try{ var d=JSON.parse(rd.result); if(!d||!Array.isArray(d.tasks)) throw 0; var f=fresh(); for(var k in f) if(d[k]===undefined) d[k]=f[k]; D=mergeData(D,d); save(); closeModal(); render(); toast('Данные восстановлены'); }catch(x){ toast('Не получилось прочитать файл копии'); } }; rd.readAsText(file); }
 });
 document.addEventListener('input',function(e){ if(e.target&&e.target.id==='f-title') parsePreview(); if(e.target&&e.target.id==='q-title') quickParse(); });
-document.addEventListener('change',function(e){
-  var M=UI.modal; if(!M||M.kind!=='quick') return;
-  if(e.target.id==='q-date'&&e.target.value){ M.date=e.target.value; M.dateSet=true; drawQuick(); }
-  if(e.target.id==='q-time'){ M.time=e.target.value; M.timeSet=true; drawQuick(); }
-  if(e.target.id==='q-cat'){ M.cat=e.target.value; M.catSet=true; drawQuick(); }
-});
+
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'&&UI.modal) closeModal();
   if(e.key==='Enter'&&UI.modal&&UI.modal.kind==='task'&&e.target.id==='f-title'){ e.preventDefault(); saveTask(); }
