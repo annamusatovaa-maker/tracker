@@ -361,9 +361,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:none;box
 .swp.lifted{z-index:5;box-shadow:0 14px 30px rgba(0,0,0,.28);position:relative;transition:none}
 .swp.lifted .swp-bg{visibility:hidden}
 .swp.lifted .arow{background:#fff}
+.swp.nest-t{position:relative;z-index:6}
 .swp.nest-t .arow{box-shadow:inset 0 0 0 2px var(--accent-solid);background:#FBF4E4}
+.swp.lifted{opacity:.92}
 .swp.drop .arow{box-shadow:inset 0 0 0 2px var(--accent-solid)}
-.drop-line{height:4px;border-radius:4px;background:var(--accent-solid);margin:1px 12px}
+.drop-mark{position:fixed;left:0;top:0;height:4px;border-radius:4px;background:var(--accent-solid);z-index:60;pointer-events:none;display:none;will-change:transform}
+.swp.lifted{will-change:transform}
 .ph-sub{opacity:.45;font-size:.62em;letter-spacing:-.01em;white-space:nowrap}
 .ov-btn{display:flex;align-items:center;gap:8px;width:100%;height:40px;padding:0 12px;border:0;border-radius:12px;background:#FBF4E4;color:#9A5B12;font:inherit;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;margin-top:2px}
 .ov-btn span{flex:1;text-align:left}
@@ -1826,41 +1829,60 @@ function applyOrder(listEl,dragId){
   save(); render();
 }
 (function(){
-  var lp=null, timer=null;
-  function clearMarks(){ document.querySelectorAll('.nest-t').forEach(function(n){ n.classList.remove('nest-t'); }); var l=document.querySelector('.drop-line'); if(l) l.remove(); }
+  // зажать дело → тянуть: на другое дело = подзадача, между делами = новый порядок.
+  // Всё считается по заранее снятым координатам, без перестройки страницы на каждом движении.
+  var lp=null, timer=null, raf=0, lastY=0, marker=null;
+  function getMarker(){ if(!marker){ marker=document.createElement('div'); marker.className='drop-mark'; document.body.appendChild(marker); } return marker; }
+  function rowsOf(list,self){ return [].slice.call(list.querySelectorAll('[data-row]')).filter(function(r){ return r!==self&&!r.closest('.subs'); }); }
+  function snap(){ var app=$('app'); lp.scroll0=app?app.scrollTop:0; lp.rects=lp.rows.map(function(r){ var b=r.getBoundingClientRect(); return {r:r,top:b.top,bot:b.bottom,left:b.left,w:b.width}; }); }
+  function setTarget(t){ if(lp.target===t) return; if(lp.target) lp.target.classList.remove('nest-t'); lp.target=t; if(t) t.classList.add('nest-t'); }
+  function frame(){
+    raf=0; if(!lp||!lp.on) return; var Y=lastY, app=$('app');
+    if(app){ if(Y<100) app.scrollTop-=10; else if(Y>window.innerHeight-140) app.scrollTop+=10; }
+    var ds=(app?app.scrollTop:0)-lp.scroll0;
+    lp.row.style.transform='translate3d('+(lp.target?28:0)+'px,'+(Y-lp.y+ds+(lp.target?14:0))+'px,0) scale('+(lp.target?0.94:1.02)+')';
+    var hit=null, k=0;
+    for(var i=0;i<lp.rects.length;i++){ var q=lp.rects[i], top=q.top-ds, bot=q.bot-ds; if(Y>=top&&Y<bot){ hit=q; k=(Y-top)/(bot-top); break; } }
+    var m=getMarker();
+    if(hit&&k>0.25&&k<0.75){ setTarget(hit.r); lp.insert=null; m.style.display='none'; }
+    else {
+      setTarget(null);
+      // ближайшая граница между строками
+      var best=null, bd=1e9;
+      lp.rects.forEach(function(q,idx){ [[q.top-ds,'before',idx],[q.bot-ds,'after',idx]].forEach(function(e){ var d=Math.abs(Y-e[0]); if(d<bd){ bd=d; best={y:e[0],pos:e[1],q:q}; } }); });
+      if(best&&bd<60){ lp.insert=best; m.style.display='block'; m.style.transform='translate3d('+best.q.left+'px,'+(best.y-2)+'px,0)'; m.style.width=best.q.w+'px'; }
+      else { lp.insert=null; m.style.display='none'; }
+    }
+    if(lp.on) raf=requestAnimationFrame(frame);
+  }
   document.addEventListener('touchstart',function(e){
     var row=e.target.closest&&e.target.closest('[data-row]'); if(!row||row.closest('.subs')||e.touches.length>1) return;
     var list=row.closest('[data-list]'); if(!list) return;
-    lp={row:row,list:list,x:e.touches[0].clientX,y:e.touches[0].clientY,on:false,target:null,before:null};
-    clearTimeout(timer); timer=setTimeout(function(){ if(!lp) return; lp.on=true; UI.dragging=true; row.classList.add('lifted'); }, 420);
+    lp={row:row,list:list,x:e.touches[0].clientX,y:e.touches[0].clientY,on:false,target:null,insert:null};
+    clearTimeout(timer); timer=setTimeout(function(){
+      if(!lp) return; lp.on=true; UI.dragging=true; lastY=lp.y;
+      lp.rows=rowsOf(list,row); snap(); row.classList.add('lifted');
+      raf=requestAnimationFrame(frame);
+    }, 380);
   },{passive:true});
   document.addEventListener('touchmove',function(e){
     if(!lp) return; var X=e.touches[0].clientX, Y=e.touches[0].clientY;
     if(!lp.on){ if(Math.abs(X-lp.x)>8||Math.abs(Y-lp.y)>8){ clearTimeout(timer); lp=null; } return; }
-    if(e.cancelable) e.preventDefault();
-    lp.row.style.transform='translateY('+(Y-lp.y)+'px) scale(1.02)';
-    lp.row.style.pointerEvents='none';
-    var under=document.elementFromPoint(X,Y), r=under&&under.closest&&under.closest('[data-row]');
-    clearMarks(); lp.target=null; lp.before=null;
-    if(r&&r!==lp.row&&!r.closest('.subs')&&lp.list.contains(r)){
-      var b=r.getBoundingClientRect(), k=(Y-b.top)/b.height;
-      if(k>0.28&&k<0.72){ r.classList.add('nest-t'); lp.target=r; }
-      else { lp.before = k<=0.28 ? r : (r.nextElementSibling&&r.nextElementSibling.classList.contains('subs') ? r.nextElementSibling.nextElementSibling : r.nextElementSibling); lp.ref=r; lp.after=k>=0.72;
-        var line=document.createElement('div'); line.className='drop-line'; r.parentNode.insertBefore(line, k<=0.28 ? r : (r.nextElementSibling&&r.nextElementSibling.classList.contains('subs')?r.nextElementSibling.nextSibling:r.nextSibling)); }
-    }
-    // прокрутка, когда тянем к краю
-    var app=$('app'); if(app){ if(Y<90) app.scrollTop-=8; else if(Y>window.innerHeight-130) app.scrollTop+=8; }
+    if(e.cancelable) e.preventDefault(); lastY=Y;
   },{passive:false});
-  document.addEventListener('touchend',function(){
-    clearTimeout(timer); if(!lp) return; var s0=lp; lp=null; UI.dragging=false;
+  function finish(){
+    clearTimeout(timer); if(!lp) return; var s0=lp; lp=null; UI.dragging=false; cancelAnimationFrame(raf); raf=0;
+    if(marker) marker.style.display='none';
     if(!s0.on) return;
-    s0.row.dataset.justSwiped='1';
-    var line=document.querySelector('.drop-line');
-    s0.row.classList.remove('lifted'); s0.row.style.transform=''; s0.row.style.pointerEvents='';
-    if(s0.target){ clearMarks(); nestTask(s0.row.dataset.row, s0.target.dataset.row); return; }
-    if(line){ line.parentNode.insertBefore(s0.row,line); clearMarks(); applyOrder(s0.list, s0.row.dataset.row); return; }
-    clearMarks(); setTimeout(function(){ delete s0.row.dataset.justSwiped; },300);
-  });
+    s0.row.dataset.justSwiped='1'; setTimeout(function(){ delete s0.row.dataset.justSwiped; },350);
+    s0.row.classList.remove('lifted'); s0.row.style.transform='';
+    if(s0.target){ s0.target.classList.remove('nest-t'); var tid=s0.target.dataset.row; setTimeout(function(){ nestTask(s0.row.dataset.row, tid); },0); return; }
+    if(s0.insert){ var ref=s0.insert.q.r, parent=ref.parentNode;
+      if(s0.insert.pos==='before') parent.insertBefore(s0.row,ref);
+      else { var nx=ref.nextElementSibling; if(nx&&nx.classList.contains('subs')) nx=nx.nextElementSibling; parent.insertBefore(s0.row,nx); }
+      setTimeout(function(){ applyOrder(s0.list, s0.row.dataset.row); },0); }
+  }
+  document.addEventListener('touchend',finish); document.addEventListener('touchcancel',finish);
 })();
 
 (function(){
